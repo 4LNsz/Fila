@@ -146,10 +146,9 @@ Queue = {
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- TEAMS
 -----------------------------------------------------------------------------------------------------------------------------------------
-local function Teams(Table, Amount)
-    local Groups = {}                          -- Grupos que estão na fila
-    local Sides = { "attackers", "defenders" } -- Lados que serão posicionados # TODO para implementar mais lados
-    local Return = {}
+local function Teams(Table, Amount, Sides)
+    local Groups = {} -- Grupos que estão na fila
+    local Return = {} -- Grupos que estão selecionados
 
     -- Geração dos lados
     for Number = 1, #Sides do
@@ -177,37 +176,32 @@ local function Teams(Table, Amount)
     -- Organizar os times
     for Number = 1, #Groups do
         local Accept = false
-        local Side = Sides[math.random(#Sides)]
-        local Size = 0
+        local Side = 1
+        local Temporary = Sides
 
-        for _, _ in pairs(Return[Side]["players"]) do
-            Size += 1
-        end
+        -- Loop para que o grupo verifique todas as possibilidades de ingressar nos lados disponibilizados
+        repeat
+            local Random = math.random(#Temporary)
+            local Selected = Sides[Random]
+            local Size = 0
 
-        if Amount - Size < Groups[Number]["Size"] then
-            if Side == "attackers" then
-                Side = "defenders"
-            else
-                Side = "attackers"
+            if Selected then
+                for _, _ in pairs(Return[Selected]["players"]) do
+                    Size += 1
+                end
+
+                if Amount - Size >= Groups[Number]["Size"] then
+                    Side = Selected
+                    Accept = true
+                else
+                    Temporary[Random] = nil
+                end
             end
-
-            -- Resetar contagem do lado
-            Size = 0
-
-            for _, _ in pairs(Return[Side]["players"]) do
-                Size += 1
-            end
-
-            if Amount - Size >= Groups[Number]["Size"] then
-                Accept = true
-            end
-        else
-            Accept = true
-        end
+        until Accept or #Temporary <= 0
 
         -- Apenas grupos que se encaixam nos parâmetros irão entrar no lado definido
         if Accept then
-            for Index, v in pairs(Table[Groups[Number]["Name"]]["players"]) do
+            for _, v in pairs(Table[Groups[Number]["Name"]]["players"]) do
                 Return[Side]["players"][#Return[Side]["players"] + 1] = v
             end
 
@@ -216,12 +210,15 @@ local function Teams(Table, Amount)
     end
 
     -- DEBUG
-    print("Tabela com os lados definidos: " .. json.encode(Return))
-    print("Grupos que ficaram na Queue: " .. json.encode(Table))
+    -- print("Tabela com os lados definidos: " .. json.encode(Return))
+    -- print("Grupos que ficaram na Queue: " .. json.encode(Table))
 
     return Return
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- EXECUTE
 -----------------------------------------------------------------------------------------------------------------------------------------
-Teams(Queue, 5) -- Tabela da Queue, Quantidade de jogadores por time (podendo ser expandido para quaisquer valores)
+-- Tabela da Queue (como é uma variável de constante alteração, irá ser utilizado ela no estado em que for executado)
+-- Quantidade de jogadores por time
+-- Lados que serão distrubuídos
+Teams(Queue, 5, { "attackers", "defenders" })
