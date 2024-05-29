@@ -144,9 +144,9 @@ Queue = {
     }
 }
 -----------------------------------------------------------------------------------------------------------------------------------------
--- TEAMS
+-- MATCHES
 -----------------------------------------------------------------------------------------------------------------------------------------
-local function Teams(Table, Amount, Sides)
+local function Matches(Table, Amount, Sides)
     local Groups = {} -- Grupos que estão na fila
     local Return = {} -- Grupos que estão selecionados
 
@@ -221,4 +221,5 @@ end
 -- Tabela da Queue (como é uma variável de constante alteração, irá ser utilizado ela no estado em que for executado)
 -- Quantidade de jogadores por time
 -- Lados que serão distrubuídos
-Teams(Queue, 5, { "attackers", "defenders" })
+-- Teams: Tabela onde está estruturada e com os times já definidos
+local Teams = Matches(Queue, 5, { "attackers", "defenders" })
