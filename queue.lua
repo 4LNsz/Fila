@@ -146,6 +146,10 @@ Queue = {
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- MATCHES
 -----------------------------------------------------------------------------------------------------------------------------------------
+---@param Table table   -- Tabela da fila
+---@param Sides table   -- Uma lista de lados em que as equipes podem ser divididas (por exemplo, atacantes e defensores)
+---@param Amount number -- A quantidade desejada de jogadores por equipe
+---@return table out    -- Tabela com os lados definidos e os jogadores selecionados
 local function Matches(Table, Amount, Sides)
     local Groups = {} -- Grupos que estão na fila
     local Return = {} -- Grupos que estão selecionados
@@ -216,10 +220,6 @@ local function Matches(Table, Amount, Sides)
     return Return
 end
 -----------------------------------------------------------------------------------------------------------------------------------------
--- EXECUTE
+-- EXAMPLE
 -----------------------------------------------------------------------------------------------------------------------------------------
--- Tabela da Queue (como é uma variável de constante alteração, irá ser utilizado ela no estado em que for executado)
--- Quantidade de jogadores por time
--- Lados que serão distrubuídos
--- Teams: Tabela onde está estruturada e com os times já definidos
-local Teams = Matches(Queue, 5, { "attackers", "defenders" })
+local Teams = Matches(Queue, { "attackers", "defenders" }, 5)
