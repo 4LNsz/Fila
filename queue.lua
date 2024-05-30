@@ -150,7 +150,7 @@ Queue = {
 ---@param Sides table   -- Uma lista de lados em que as equipes podem ser divididas (por exemplo, atacantes e defensores)
 ---@param Amount number -- A quantidade desejada de jogadores por equipe
 ---@return table out    -- Tabela com os lados definidos e os jogadores selecionados
-local function Matches(Table, Amount, Sides)
+local function Matches(Table, Sides, Amount)
     local Groups = {} -- Grupos que estão na fila
     local Return = {} -- Grupos que estão selecionados
 
